@@ -1,4 +1,0 @@
-{
-    "appService.defaultWebAppToDeploy": "undefined/subscriptions/b75e996b-c504-41ea-a4f4-636059267d1e/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/datc-alex-gaita-lab1",
-    "appService.deploySubpath": "."
-}
