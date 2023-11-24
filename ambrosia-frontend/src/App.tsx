@@ -1,7 +1,21 @@
-import "./App.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { MapPage } from "./MapPage";
 
 function App() {
-  return <div></div>;
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/login" />
+        <Route path="/map">
+          <MapPage />
+        </Route>
+        <Route path="">
+          <MapPage />
+        </Route>
+        <Route path="/admin" />
+      </Switch>
+    </BrowserRouter>
+  );
 }
 
 export default App;
