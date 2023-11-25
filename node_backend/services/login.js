@@ -12,4 +12,10 @@ const handleLogin = async (userName, password,res) => {
     res.status(200).json({ isAdmin: user.isAdmin  });
 }
 
-module.exports = { handleLogin }
+const handleGetAllUsers = async (req, res) => {
+    const users = await userRepo.getAllUsers();
+    res.status(200).json(users);
+}
+
+
+module.exports = { handleLogin ,handleGetAllUsers}

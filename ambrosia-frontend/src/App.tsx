@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { MapPage } from "./MapPage";
 import { Login } from "./Login";
+import AdminPage from "./AdminPage";
 
 function App() {
   return (
@@ -12,11 +13,8 @@ function App() {
         <Route path="/map">
           <MapPage />
         </Route>
-        <Route path="">
-          <MapPage />
-        </Route>
         <Route path="/admin">
-          <div></div>
+          <AdminPage />
         </Route>
       </Switch>
     </BrowserRouter>
