@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState, useCallback } from "react";
-import { createRoot } from "react-dom/client";
 import Map from "react-map-gl";
 import { DrawControl } from "./draw-control";
 import { ControlPanel } from "./control-panel";
@@ -42,8 +41,12 @@ export function MapPage() {
         mapStyle="mapbox://styles/mapbox/streets-v12"
         mapboxAccessToken={TOKEN}
         style={{
-          height: "80vh",
+          height: "90vh",
           width: "100vw",
+          borderRadius: "20%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <DrawControl

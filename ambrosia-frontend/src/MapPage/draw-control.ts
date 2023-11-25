@@ -12,7 +12,7 @@ type DrawControlProps = ConstructorParameters<typeof MapboxDraw>[0] & {
 };
 
 export function DrawControl(props: DrawControlProps) {
-  useControl<MapboxDraw>(
+  useControl<MapboxDraw | any>(
     () => new MapboxDraw(props),
     ({ map }: { map: any }) => {
       map.on("draw.create", props.onCreate);

@@ -9,7 +9,18 @@ export function ControlPanel(props: any) {
   }
 
   return (
-    <div className="control-panel">
+    <div
+      className="control-panel"
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        margin: "10px",
+        backgroundColor: "white",
+        padding: "20px",
+        borderRadius: "10px",
+      }}
+    >
       <h3>Draw Polygon</h3>
       {polygonArea > 0 && (
         <p>
