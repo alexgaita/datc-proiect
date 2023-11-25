@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
-import  "./styles.css";
+
 
 interface Credentials {
   username: string;
@@ -23,16 +23,36 @@ export function Login() {
   };
 const isDisabled=!credentials.username || !credentials.password;
   return (
-    <form>
-      <label htmlFor="username">Username</label>
-      <input
+    <div style={{display:"flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100vh",
+      margin: "0"}}>
+    <form style={{ maxWidth: "300px",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)"}}>
+      <label style={{display:"block",
+    marginBottom:"8px",
+    fontWeight:"bold"}} htmlFor="username">Username</label>
+      <input style={{width:"100%",
+      padding:"8px",
+    marginBottom:"16px",
+  boxSizing:"border-box"}}
         type="text"
         placeholder="Username"
         value={credentials.username}
         onChange={(event) => handleInputChange(event, "username")}
       />
-      <label htmlFor="password">Password</label>
+      <label style={{display:"block",
+    marginBottom:"8px",
+    fontWeight:"bold"}} htmlFor="password">Password</label>
       <input
+      style={{width:"100%",
+      padding:"8px",
+    marginBottom:"16px",
+  boxSizing:"border-box"}}
         type="password"
         placeholder="Password"
         value={credentials.password}
@@ -46,9 +66,13 @@ const isDisabled=!credentials.username || !credentials.password;
           borderRadius: "5px",
           cursor: "pointer",
           backgroundColor:isDisabled?"red":"green"}} disabled={isDisabled} onClick={()=>{
-        alert("Login succesfull")
+        
         
       }}>Login</button>
-    </form>
-  );
+      
+       </form>
+    
+    </div>);
+    
+  
 }
