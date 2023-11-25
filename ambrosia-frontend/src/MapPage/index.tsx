@@ -41,7 +41,7 @@ export function MapPage() {
         mapStyle="mapbox://styles/mapbox/streets-v12"
         mapboxAccessToken={TOKEN}
         style={{
-          height: "90vh",
+          height: "80vh",
           width: "100vw",
           borderRadius: "20%",
           display: "flex",
