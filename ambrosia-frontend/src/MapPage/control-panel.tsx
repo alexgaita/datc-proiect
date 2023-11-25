@@ -21,7 +21,7 @@ export function ControlPanel(props: any) {
         borderRadius: "10px",
       }}
     >
-      <h3>Draw Polygon</h3>
+      <h3>Area</h3>
       {polygonArea > 0 && (
         <p>
           {Math.round(polygonArea * 100) / 100} <br />

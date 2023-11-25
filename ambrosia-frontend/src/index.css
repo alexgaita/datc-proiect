@@ -13,25 +13,27 @@ code {
 }
 
 .mapbox-gl-draw_polygon {
-  width: 45px !important;
-  height: 45px !important;
+  width: 64px !important;
+  height: 64px !important;
   margin: 10px;
-  background-image: url("../public/plus.png");
+  background-image: url("../public/add.png");
   background-size: contain;
   border-radius: 100%;
   border: none;
   cursor: pointer;
+  background-color: white;
 }
 
 .mapbox-gl-draw_trash {
-  width: 45px !important;
-  height: 45px !important;
+  width: 64px !important;
+  height: 64px !important;
   margin: 10px;
-  background-image: url("../public/round.png");
+  background-image: url("../public/trash-can.png");
   background-size: contain;
   border-radius: 100%;
   border: none;
   cursor: pointer;
+  background-color: white;
 }
 
 .mapboxgl-ctrl-attrib-button {
