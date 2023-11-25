@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const loginService = require('./services/login');
 const zoneService = require('./services/zones');
+const statisticsService = require('./services/statistics');
 require('dotenv').config();
 
 app.use(express.json());
@@ -43,6 +44,10 @@ app.get('/isInZone', async (req, res) => {
 // PUT /zones/{id}
 app.put('/zones/:id', (req, res) => {
     zoneService.updateZone(req, res);
+});
+
+app.get('/statistics', (req, res) => {
+    statisticsService.getStatistics(req, res);
 });
 
 app.get('*', (req, res) => {

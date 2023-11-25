@@ -14,7 +14,7 @@ const getAllZones = async () => {
   for await (const zone of zoneReponse) {
     zones.push({
         id: zone.partitionKey,
-        size: zone.size,
+        size: Number(zone.size),
         points: JSON.parse(zone.points),
     });
   }
@@ -30,7 +30,7 @@ const createZone = async (zone) => {
     await zoneTableClient.createEntity({
         partitionKey: uuidv4(),
         rowKey: "Zone",
-        size: zone.size,
+        size: Number(zone.size),
         points: JSON.stringify(zone.points),
     });
     }
