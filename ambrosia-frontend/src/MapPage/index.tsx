@@ -3,7 +3,9 @@ import { useState, useCallback } from "react";
 import Map from "react-map-gl";
 import { DrawControl } from "./draw-control";
 import { ControlPanel } from "./control-panel";
-import { ColorRing, RotatingLines } from "react-loader-spinner";
+import { RotatingLines } from "react-loader-spinner";
+
+import "./styles.css";
 
 const TOKEN =
   "pk.eyJ1IjoiYWxleDg4MTIxMyIsImEiOiJjbHBkMTBmY2kwdmRkMmpxdDhwZ2kzN2J6In0.iTBF38aHM4k7CqWeqV3kiQ"; // Set your mapbox token here
@@ -56,43 +58,54 @@ export function MapPage() {
     } else {
       console.log("error");
     }
-  }, []);
+  }, [location]);
 
   return (
     <>
       {location ? (
-        <Map
-          initialViewState={{
-            longitude: location?.longitude,
-            latitude: location?.latitude,
-            zoom: 12,
-          }}
-          interactive
-          mapStyle="mapbox://styles/mapbox/streets-v12"
-          mapboxAccessToken={TOKEN}
-          style={{
-            height: "80vh",
-            width: "100vw",
-            borderRadius: "20%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <DrawControl
-            position="top-left"
-            displayControlsDefault={false}
-            controls={{
-              polygon: true,
-              trash: true,
+        <>
+          <Map
+            initialViewState={{
+              longitude: location?.longitude,
+              latitude: location?.latitude,
+              zoom: 12,
             }}
-            defaultMode="draw_polygon"
-            onCreate={onUpdate}
-            onUpdate={onUpdate}
-            onDelete={onDelete}
-          />
-          <ControlPanel polygons={Object.values(features)} />
-        </Map>
+            interactive
+            mapStyle="mapbox://styles/mapbox/streets-v12"
+            mapboxAccessToken={TOKEN}
+            style={{
+              height: "80vh",
+              width: "100vw",
+              borderRadius: "20%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <DrawControl
+              position="top-left"
+              displayControlsDefault={false}
+              controls={{
+                polygon: true,
+                trash: true,
+              }}
+              defaultMode="draw_polygon"
+              onCreate={onUpdate}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+            />
+            <ControlPanel polygons={Object.values(features)} />
+            <button
+              className="button-23"
+              onClick={() => {
+                window.location.href = "admin";
+              }}
+            >
+              {" "}
+              To Admin Page
+            </button>
+          </Map>
+        </>
       ) : (
         <div
           style={{
