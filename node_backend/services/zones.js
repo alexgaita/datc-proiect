@@ -2,25 +2,34 @@ const zoneRepository = require('../repositories/zoneRepo');
 const turf = require('@turf/turf')
 
 const getAllZones = async (req, res) => {
-    const zones = await zoneRepository.getAllZones();
-    res.status(200).json(zones);
+    zoneRepository.getAllZones().then((zones) => {
+        res.status(200).json(zones);
+    }).catch((err) => {
+        res.status(500).json({ message: err.message });
+    });
 }
 
-const createZone = async (req, res) => {
-    await zoneRepository.createZone(req.body);
-    res.status(201).json({ message: "Zone created" });
-}
+const createZone = async (req, res) => 
+    zoneRepository.createZone(req.body).then(() => {
+        res.status(200).json({ message: "Zone created" });
+    }).catch ((err) => {
+        res.status(500).json({ message: err.message });
+    });
+
 
 const updateZone = async (req, res) => {
     console.log(`Update zone with id: ${req.params.id}`);
 
-    await zoneRepository.updateZone({
+    zoneRepository.updateZone({
         partitionKey: req.params.id,
         rowKey: "Zone",
         size: req.body.size,
         points: JSON.stringify(req.body.points),
+    }).then(() => {
+        res.status(200).json({ message: "Zone updated" });
+    }).catch ((err) => {
+        res.status(500).json({ message: err.message });
     });
-    res.status(200).json({ message: "Zone updated" });
 }
 
 const isInZone = async (req, res) => {

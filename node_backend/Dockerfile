@@ -6,7 +6,7 @@
 
 ARG NODE_VERSION=16.14.2
 
-FROM node:${NODE_VERSION}-alpine
+FROM --platform=linux/amd64 node:${NODE_VERSION}-alpine
 
 # Use production node environment by default.
 ENV NODE_ENV production
