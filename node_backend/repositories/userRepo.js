@@ -6,5 +6,21 @@ const getUser = async (id) => {
   return response;
 }
 
-module.exports = {getUser}
+const getAllUsers = async () => {
+  const userReponse = userTableClient.listEntities();
+
+  const users = [];
+
+  for await (const user of userReponse) {
+    users.push({
+        id: user.partitionKey,
+        name: user.name,
+        isAdmin: user.isAdmin,
+    });
+  }
+
+  return users;
+}
+
+module.exports = {getUser,getAllUsers}
 

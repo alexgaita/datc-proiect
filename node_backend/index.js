@@ -1,12 +1,16 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const loginService = require('./services/login');
 const zoneService = require('./services/zones');
 const statisticsService = require('./services/statistics');
 require('dotenv').config();
 
-app.use(express.json());
 
+app.use(express.json());
+app.use(cors({
+    origin:'*'
+}))
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Hello world!' });
@@ -48,6 +52,10 @@ app.put('/zones/:id', (req, res) => {
 
 app.get('/statistics', (req, res) => {
     statisticsService.getStatistics(req, res);
+});
+
+app.get('/users', (req, res) => {
+    loginService.handleGetAllUsers(req, res);
 });
 
 app.get('*', (req, res) => {
