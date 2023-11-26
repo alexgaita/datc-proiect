@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState, useCallback } from "react";
-import Map from "react-map-gl";
+import Map, { Marker } from "react-map-gl";
 import { DrawControl } from "./draw-control";
 import { ControlPanel } from "./control-panel";
 import { RotatingLines } from "react-loader-spinner";
@@ -12,9 +12,8 @@ import { deleteZone, saveZone } from "../api/zones";
 const TOKEN =
   "pk.eyJ1IjoiYWxleDg4MTIxMyIsImEiOiJjbHBkMTBmY2kwdmRkMmpxdDhwZ2kzN2J6In0.iTBF38aHM4k7CqWeqV3kiQ"; // Set your mapbox token here
 
-export function MapPage() {
+export function MapPage({ isAdmin }: { isAdmin: boolean }) {
   const [features, setFeatures] = useState({});
-  const [sendFeatures, setSendFeatures] = useState([]);
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -81,25 +80,29 @@ export function MapPage() {
 
   function error() {
     console.log("Unable to retrieve your location");
+    setLocation({ latitude: 45.7494, longitude: 21.2272 });
   }
 
   useEffect(() => {
     if (navigator.geolocation) {
-      setTimeout(() => {
-        navigator.geolocation.getCurrentPosition(success, error);
-        if (location === undefined) {
-          setLocation({ latitude: 45.7494, longitude: 21.2272 });
-        }
-      }, 5000);
+      const config = {
+        enableHighAccuracy: true,
+        // response should provide a more accurate position
+        timeout: 10000,
+        // the device is allowed to take 10 seconds in order to return a position
+      };
+      navigator.geolocation.getCurrentPosition(success, error, config);
+
+
     } else {
-      console.log("error");
+      console.log("Geolocation is not supported by this browser.");
     }
   }, []);
 
   return (
     <>
       {location ? (
-        <>
+        <div style={{display:"flex", flexDirection:"column",rowGap: 20, height:"100vh"}}>
           <Map
             initialViewState={{
               longitude: location?.longitude,
@@ -111,11 +114,7 @@ export function MapPage() {
             mapboxAccessToken={TOKEN}
             style={{
               height: "80vh",
-              width: "100vw",
-              borderRadius: "20%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              width: "100vw",              
             }}
           >
             <DrawControl
@@ -132,18 +131,41 @@ export function MapPage() {
               onCreate={onUpdate}
               onDelete={onDelete}
             />
+            <Marker
+              longitude={location.longitude}
+              latitude={location.latitude}
+            />
             <ControlPanel polygons={Object.values(features)} />
+
+            </Map>
+
+            <div style={{alignSelf:"center"}}>
+
+            {isAdmin && (
+              <button
+                className="button-23"
+                onClick={() => {
+                  window.location.href = "admin";
+                }}
+              >
+                {" "}
+                To Admin Page
+              </button>
+            )}
             <button
               className="button-23"
+              style={{ marginLeft: isAdmin ? 10 : 0 }}
               onClick={() => {
-                window.location.href = "admin";
+                localStorage.setItem("isAdmin", "null");
+                window.location.href = "/";
               }}
             >
               {" "}
-              To Admin Page
+              Logout
             </button>
-          </Map>
-        </>
+            </div>
+
+        </div>
       ) : (
         <div
           style={{

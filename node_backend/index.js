@@ -22,7 +22,9 @@ app.get('/api/health', (req, res) => {
 
 // GET /login
 app.post('/login', async (req, res) => {
-    loginService.handleLogin(req.body.userName, req.body.password, res);
+    loginService.handleLogin(req.body.userName, req.body.password, res).catch((err) => {
+        res.status(500).json({ message: err.message });
+    });
 });
 
 // GET /zones
@@ -48,6 +50,10 @@ app.get('/isInZone', async (req, res) => {
 // PUT /zones/{id}
 app.put('/zones/:id', (req, res) => {
     zoneService.updateZone(req, res);
+});
+
+app.delete('/zones/:id', (req, res) => {
+    zoneService.deleteZone(req, res);
 });
 
 app.get('/statistics', (req, res) => {

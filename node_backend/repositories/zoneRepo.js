@@ -35,4 +35,8 @@ const createZone = async (zone) => {
   });
 };
 
-module.exports = { getZoneById, getAllZones, createZone, updateZone };
+const deleteZone = async (id) => {
+  await zoneTableClient.deleteEntity(id, "Zone");
+};
+
+module.exports = { getZoneById, getAllZones, createZone, updateZone, deleteZone };

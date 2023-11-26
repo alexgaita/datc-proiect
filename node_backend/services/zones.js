@@ -54,5 +54,15 @@ const isInZone = async (req, res) => {
     return res.status(200).json({ isInZone });
 }
 
-module.exports = { getAllZones, createZone, updateZone, isInZone }
+const deleteZone = async (req, res) => {
+    console.log(`Delete zone with id: ${req.params.id}`);
+
+    zoneRepository.deleteZone(req.params.id).then(() => {
+        res.status(200).json({ message: "Zone deleted" });
+    }).catch ((err) => {
+        res.status(500).json({ message: err.message });
+    });
+}
+
+module.exports = { getAllZones, createZone, updateZone, isInZone,deleteZone }
 

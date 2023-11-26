@@ -13,9 +13,9 @@ code {
 }
 
 .mapbox-gl-draw_polygon {
-  width: 64px !important;
+  /* width: 64px !important;
   height: 64px !important;
-  margin: 10px;
+  margin: 10px; */
   background-image: url("../public/add.png");
   background-size: contain;
   border-radius: 100%;
@@ -25,9 +25,9 @@ code {
 }
 
 .mapbox-gl-draw_trash {
-  width: 64px !important;
+  /* width: 64px !important;
   height: 64px !important;
-  margin: 10px;
+  margin: 10px; */
   background-image: url("../public/trash-can.png");
   background-size: contain;
   border-radius: 100%;
