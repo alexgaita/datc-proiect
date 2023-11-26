@@ -22,10 +22,10 @@ ChartJS.register(
 );
 
 
-const convertValue = (value) => {
+export const convertValue = (value) => {
 
-    if(value>1000000) return value/1000000 + 'km2'
-    if(value>10000) return value/10000 + 'ha'
+    if(value>1000000) return (value/1000000).toFixed(3) + 'km2'
+    if(value>10000) return (value/10000).toFixed(3) + 'ha'
 
     return value + 'm2'
 } 
