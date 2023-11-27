@@ -5,12 +5,17 @@ import { Login } from "./Login";
 import AdminPage from "./AdminPage";
 
 function App() {
-
   const [isAdmin, setIsAdmin] = useState<boolean | null>(true);
 
   useEffect(() => {
     const isLoggedInAsAdmin = localStorage.getItem("isAdmin");
-    setIsAdmin(isLoggedInAsAdmin === "true" ? true : isLoggedInAsAdmin === "false" ? false : null);
+    setIsAdmin(
+      isLoggedInAsAdmin === "true"
+        ? true
+        : isLoggedInAsAdmin === "false"
+          ? false
+          : null,
+    );
   }, []);
 
   const renderRoutes = () => {
@@ -18,28 +23,23 @@ function App() {
       return <Login />;
     }
 
-    if(isAdmin === false){
+    if (isAdmin === false) {
       return <MapPage isAdmin={isAdmin} />;
     }
 
     return (
       <Switch>
         <Route path="/map">
-          <MapPage isAdmin={isAdmin}/>
+          <MapPage isAdmin={isAdmin} />
         </Route>
         <Route path="/admin">
           <AdminPage />
         </Route>
       </Switch>
     );
-  }
+  };
 
-
-  return (
-    <BrowserRouter>
-      {renderRoutes()}
-    </BrowserRouter>
-  );
+  return <BrowserRouter>{renderRoutes()}</BrowserRouter>;
 }
 
 export default App;

@@ -1,44 +1,41 @@
-import axios from "./axios"
-import { AxiosResponse } from "axios"
-import dayjs from "dayjs"
+import axios from "./axios";
+import { AxiosResponse } from "axios";
+import dayjs from "dayjs";
 
-const responseBody = (response: AxiosResponse) => response.data
+const responseBody = (response: AxiosResponse) => response.data;
 
 export type StatisticsResponse = {
-    size: number
-    timestamp: string
-}
+  size: number;
+  timestamp: string;
+};
 
 const getStatistics = (): Promise<StatisticsResponse[]> => {
-    return axios
-        .get(`/statistics`)
-        .then(responseBody).catch((error) => {
-            console.log(error)
-            return []
-        })
-}
+  return axios
+    .get(`/statistics`)
+    .then(responseBody)
+    .catch((error) => {
+      console.log(error);
+      return [];
+    });
+};
 
 const useStatisticsQuery = () => {
+  const handleGetStatistics = async () => {
+    const response = await getStatistics();
 
-    const handleGetStatistics = async () => {
+    const statisticsWithDate = response.map((statistic) => {
+      return {
+        ...statistic,
+        date: dayjs(statistic.timestamp).format("DD/MM/YYYY"),
+      };
+    });
 
-        const response = await getStatistics()
+    return statisticsWithDate;
+  };
 
-        const statisticsWithDate = response.map((statistic) => {
-            return {
-                ...statistic,
-                date: dayjs(statistic.timestamp).format("DD/MM/YYYY"),
-            }
-        })
-
-        return statisticsWithDate
-    }
-
-    return {
-        handleGetStatistics,
-    }
-
-}
+  return {
+    handleGetStatistics,
+  };
+};
 
 export default useStatisticsQuery;
-

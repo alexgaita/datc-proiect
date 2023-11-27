@@ -1,80 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useState, useCallback } from "react";
-import Map, { Marker } from "react-map-gl";
-import { DrawControl } from "./draw-control";
 import { ControlPanel } from "./control-panel";
 import { RotatingLines } from "react-loader-spinner";
-import area from "@turf/area";
-
+import { Feature } from "geojson";
 import "./styles.css";
-import { deleteZone, saveZone } from "../api/zones";
+import { deleteZone, getIsInZone, saveZone } from "../api/zones";
+import useNewMap from "./newMap";
 
 const TOKEN =
   "pk.eyJ1IjoiYWxleDg4MTIxMyIsImEiOiJjbHBkMTBmY2kwdmRkMmpxdDhwZ2kzN2J6In0.iTBF38aHM4k7CqWeqV3kiQ"; // Set your mapbox token here
 
 export function MapPage({ isAdmin }: { isAdmin: boolean }) {
-  const [features, setFeatures] = useState({});
+  const locationRef = useRef<{
+    latitude: number;
+    longitude: number;
+  }>();
   const [location, setLocation] = useState<{
     latitude: number;
     longitude: number;
   }>();
-  const [isSending, setIsSending] = useState(false);
+  const [features, setFeatures] = useState<Feature<any, any>[] | null>(null);
+  const [isInZone, setIsInZone] = useState<boolean>(false);
 
-  const onUpdate = useCallback(
-    async (e: any) => {
-      setFeatures((currFeatures) => {
-        const newFeatures: any = { ...currFeatures };
-        for (const f of e.features) {
-          if (newFeatures[f.id]) continue;
-          newFeatures[f.id] = f;
-        }
-
-        const newAdded = Object.keys(newFeatures).filter(
-          (x: any) => !Object.keys(currFeatures).includes(x)
-        )[0];
-
-        console.log(newFeatures[newAdded]);
-        const size = Math.round(area(newFeatures[newAdded]) * 100) / 100;
-        console.log(size);
-        //aici vine axios cu newAdded
-        if (!isSending) {
-          setIsSending(true);
-          saveZone({
-            id: newFeatures[newAdded].id,
-            size,
-            points: newFeatures[newAdded].geometry.coordinates,
-          })
-            .then(() => console.log("save worked"))
-            .catch((error) => console.error(error));
-        }
-
-        return newFeatures;
-      });
-    },
-    [isSending]
-  );
-
-  const onDelete = useCallback((e: any) => {
-    setFeatures((currFeatures) => {
-      const newFeatures: any = { ...currFeatures };
-      for (const f of e.features) {
-        delete newFeatures[f.id];
-      }
-      const deleted = Object.keys(currFeatures).filter(
-        (x: any) => !Object.keys(newFeatures).includes(x)
-      )[0];
-
-      deleteZone(deleted)
-        .then(() => console.log("save worked"))
-        .catch((error) => console.error(error));
-
-      return newFeatures;
-    });
-  }, []);
+  const { handleMapLoad } = useNewMap({ setFeatures });
 
   function success(position: any) {
+    console.log("position", position);
     const latitude: number = position.coords.latitude;
     const longitude: number = position.coords.longitude;
+    locationRef.current = { latitude, longitude };
     setLocation({ latitude, longitude });
   }
 
@@ -87,60 +41,77 @@ export function MapPage({ isAdmin }: { isAdmin: boolean }) {
     if (navigator.geolocation) {
       const config = {
         enableHighAccuracy: true,
-        // response should provide a more accurate position
-        timeout: 10000,
-        // the device is allowed to take 10 seconds in order to return a position
+        timeout: 5000,
       };
       navigator.geolocation.getCurrentPosition(success, error, config);
-
-
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
+
+    const intervalId = setInterval(() => {
+      console.log("checking if map is loaded");
+      const mapContainer = document.getElementById("map");
+      if (mapContainer && locationRef.current) {
+        // Container with id "map" is rendered
+        clearInterval(intervalId);
+        // Perform any actions you need here
+
+        const { longitude, latitude } = locationRef.current; // Destructure the location object
+        handleMapLoad(longitude, latitude);
+      }
+    }, 2000); // Check every 3 secondsn
+
+    return () => {
+      clearInterval(intervalId); // Clean up the interval on component unmount
+    };
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!locationRef.current) return;
+
+      console.log("checking if in zone");
+
+      const { longitude, latitude } = locationRef.current; // Destructure the location object
+
+      getIsInZone(longitude, latitude).then((response) => {
+        setIsInZone(response.isInZone);
+      });
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId); // Clean up the interval on component unmount
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isInZone) {
+      alert("You are in a zone!");
+    }
+  }, [isInZone]);
+
+  console.log(location);
 
   return (
     <>
       {location ? (
-        <div style={{display:"flex", flexDirection:"column",rowGap: 20, height:"100vh"}}>
-          <Map
-            initialViewState={{
-              longitude: location?.longitude,
-              latitude: location?.latitude,
-              zoom: 12,
-            }}
-            interactive
-            mapStyle="mapbox://styles/mapbox/streets-v12"
-            mapboxAccessToken={TOKEN}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            rowGap: 20,
+            height: "100vh",
+          }}
+        >
+          <div
+            id="map"
             style={{
               height: "80vh",
-              width: "100vw",              
+              width: "100vw",
             }}
-          >
-            <DrawControl
-              position="top-left"
-              displayControlsDefault={false}
-              controls={{
-                polygon: true,
-                trash: true,
-              }}
-              defaultMode="draw_polygon"
-              onUpdate={() => {
-                console.log("aici");
-              }}
-              onCreate={onUpdate}
-              onDelete={onDelete}
-            />
-            <Marker
-              longitude={location.longitude}
-              latitude={location.latitude}
-            />
-            <ControlPanel polygons={Object.values(features)} />
-
-            </Map>
-
-            <div style={{alignSelf:"center"}}>
-
+          ></div>
+          <ControlPanel polygons={features} />
+          <div style={{ alignSelf: "center" }}>
             {isAdmin && (
               <button
                 className="button-23"
@@ -163,8 +134,7 @@ export function MapPage({ isAdmin }: { isAdmin: boolean }) {
               {" "}
               Logout
             </button>
-            </div>
-
+          </div>
         </div>
       ) : (
         <div

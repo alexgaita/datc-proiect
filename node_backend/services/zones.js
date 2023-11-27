@@ -39,11 +39,7 @@ const isInZone = async (req, res) => {
     let isInZone = false;
 
     zones.forEach(zone => {
-        const points = zone.points.map(point => [point.x, point.y]);
-
-        console.log(points);
-
-        const poly = turf.polygon([points]);
+        const poly = turf.polygon(zone.points);
 
         if (turf.booleanPointInPolygon(point, poly)) {
             isInZone = true;
