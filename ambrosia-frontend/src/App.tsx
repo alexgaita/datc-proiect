@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { MapPage } from "./MapPage";
 import { Login } from "./Login";
 import AdminPage from "./AdminPage";
@@ -14,7 +14,7 @@ function App() {
         ? true
         : isLoggedInAsAdmin === "false"
           ? false
-          : null,
+          : null
     );
   }, []);
 
@@ -29,6 +29,9 @@ function App() {
 
     return (
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/map" />
+        </Route>
         <Route path="/map">
           <MapPage isAdmin={isAdmin} />
         </Route>
