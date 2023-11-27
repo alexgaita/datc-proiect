@@ -9,8 +9,13 @@ function App() {
 
   useEffect(() => {
     const isLoggedInAsAdmin = localStorage.getItem("isAdmin");
-    setIsAdmin(isLoggedInAsAdmin === "true" ? true : isLoggedInAsAdmin === "false" ? false : null);
-
+    setIsAdmin(
+      isLoggedInAsAdmin === "true"
+        ? true
+        : isLoggedInAsAdmin === "false"
+          ? false
+          : null,
+    );
   }, []);
 
   const renderRoutes = () => {
@@ -34,11 +39,7 @@ function App() {
     );
   };
 
-  return (
-    <BrowserRouter>
-      {renderRoutes()}
-    </BrowserRouter>
-  );
+  return <BrowserRouter>{renderRoutes()}</BrowserRouter>;
 }
 
 export default App;

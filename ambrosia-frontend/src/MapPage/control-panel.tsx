@@ -4,7 +4,6 @@ import area from "@turf/area";
 import { convertValue } from "../AdminPage/chart";
 
 export function ControlPanel({ polygons }: any) {
-
   console.log("intra aici in control panel");
 
   const calculatePolygonArea = (polygons: any) => {
@@ -12,8 +11,8 @@ export function ControlPanel({ polygons }: any) {
     polygons.forEach((polygon: any) => {
       polygonArea += area(polygon);
     });
-    return polygonArea
-  }
+    return polygonArea;
+  };
 
   if (!polygons) {
     return null;
@@ -39,9 +38,10 @@ export function ControlPanel({ polygons }: any) {
       {calculatePolygonArea(polygons) > 0 ? (
         <p>
           {convertValue(calculatePolygonArea(polygons))} <br />
-          
         </p>
-      ) : <p>Start Drawing</p>}
+      ) : (
+        <p>Start Drawing</p>
+      )}
     </div>
   );
 }

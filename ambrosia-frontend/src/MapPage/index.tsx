@@ -10,7 +10,6 @@ import useNewMap from "./newMap";
 const TOKEN =
   "pk.eyJ1IjoiYWxleDg4MTIxMyIsImEiOiJjbHBkMTBmY2kwdmRkMmpxdDhwZ2kzN2J6In0.iTBF38aHM4k7CqWeqV3kiQ"; // Set your mapbox token here
 
-
 export function MapPage({ isAdmin }: { isAdmin: boolean }) {
   const locationRef = useRef<{
     latitude: number;
@@ -23,13 +22,13 @@ export function MapPage({ isAdmin }: { isAdmin: boolean }) {
   const [features, setFeatures] = useState<Feature<any, any>[] | null>(null);
   const [isInZone, setIsInZone] = useState<boolean>(false);
 
-  const { handleMapLoad } = useNewMap({setFeatures});
+  const { handleMapLoad } = useNewMap({ setFeatures });
 
   function success(position: any) {
     console.log("position", position);
     const latitude: number = position.coords.latitude;
     const longitude: number = position.coords.longitude;
-    locationRef.current = { latitude, longitude }
+    locationRef.current = { latitude, longitude };
     setLocation({ latitude, longitude });
   }
 
@@ -45,8 +44,6 @@ export function MapPage({ isAdmin }: { isAdmin: boolean }) {
         timeout: 5000,
       };
       navigator.geolocation.getCurrentPosition(success, error, config);
-
-
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
@@ -67,50 +64,54 @@ export function MapPage({ isAdmin }: { isAdmin: boolean }) {
     return () => {
       clearInterval(intervalId); // Clean up the interval on component unmount
     };
-
   }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if(!locationRef.current) return;
+      if (!locationRef.current) return;
 
-      console.log('checking if in zone');
+      console.log("checking if in zone");
 
       const { longitude, latitude } = locationRef.current; // Destructure the location object
 
       getIsInZone(longitude, latitude).then((response) => {
         setIsInZone(response.isInZone);
       });
-     
     }, 5000);
 
     return () => {
       clearInterval(intervalId); // Clean up the interval on component unmount
     };
-
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if(isInZone) {
+    if (isInZone) {
       alert("You are in a zone!");
     }
-  }, [isInZone])
-  
+  }, [isInZone]);
+
   console.log(location);
 
   return (
     <>
-      {location  ? (
-        <div style={{ display: "flex", flexDirection: "column", rowGap: 20, height: "100vh" }}>
-
-          <div id="map" style={{
-            height: "80vh",
-            width: "100vw",
-          }}>
-          </div>
-          <ControlPanel polygons={features}/>
+      {location ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            rowGap: 20,
+            height: "100vh",
+          }}
+        >
+          <div
+            id="map"
+            style={{
+              height: "80vh",
+              width: "100vw",
+            }}
+          ></div>
+          <ControlPanel polygons={features} />
           <div style={{ alignSelf: "center" }}>
-
             {isAdmin && (
               <button
                 className="button-23"
@@ -134,7 +135,6 @@ export function MapPage({ isAdmin }: { isAdmin: boolean }) {
               Logout
             </button>
           </div>
-
         </div>
       ) : (
         <div
